@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>To Do List</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Todo App | mhmdkhsrvi.ir</h1>
+        <div class="input-section">
+            <input type="text" placeholder="add todo ..." id="task-input">
+            <input type="date" name="data" id="data-input">
+            <button id="add-btn" type="submit">add</button>
+            <button id="edit-btn" type="submit">edit</button>
+        </div>
+        <div class="todo-actions">
+            <div class="todo-action-left">
+                <button data-filter="all" class="filter-todos">all</button>
+                <button data-filter="pending" class="filter-todos">pending</button>
+                <button data-filter="completed" class="filter-todos">completed<v/button>
+            </div>
+                <button id="delete-all">delete all</button>
+        </div>
+    </div>
+    <div id="alert-message"></div>
+    <div class="table">
+        <table>
+            <thead>
+                <tr>
+                    <th>task</th>
+                    <th>data</th>
+                    <th>status</th>
+                    <th>action</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
+    <script src="js/main.js"></script>
+</body>
+</html>
