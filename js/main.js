@@ -6,7 +6,13 @@ const todosBody = document.querySelector('tbody');
 const deleteAllTasks = document.querySelector('#delete-all');
 const editTaskBtn = document.querySelector('#edit-btn')
 const filterBtns = document.querySelectorAll('.filter-todos')
-let todos =JSON.parse(localStorage.getItem('todos')) || [];
+let todos = JSON.parse(localStorage.getItem('todos')) || [];
+const changeEditToAdd = ()=> {
+    editTaskBtn.style.display = 'none'
+    addTaskBtn.style.display = 'inline-block'
+    taskInput.value = ''
+    dataInput.value = ''
+}
 const saveToLocalStorage = ()=> {
     localStorage.setItem('todos' , JSON.stringify(todos))
 }
@@ -60,7 +66,7 @@ const displayTodos = (data)=> {
         <td>
         <button onclick="editHandler('${todo.id}')">Edit</button>
         <button onclick="toggleHandler('${todo.id}')">${todo.completed ? 'Undo' : 'Do'}</button>
-        <button onclick="deleteHandler('${todo.id}')">Delete</button>
+        <button id="delete-one" onclick="deleteHandler('${todo.id}')">Delete</button>
         </td>
         </tr>
         `;
@@ -74,35 +80,53 @@ todo.completed = !todo.completed;
     showAlert('todo status changed successfully' , 'success')
 }
 const editHandler = (id)=> {
-    const todo = todos.find(todo => todo.id === id);
-    taskInput.value = todo.task;
-    dataInput.value = todo.date;
-    addTaskBtn.style.display = 'none';
-    editTaskBtn.style.display ='inline-block';
-    editTaskBtn.dataset.id = id;
+        const todo = todos.find(todo => todo.id === id);
+        taskInput.value = todo.task;
+        dataInput.value = todo.date;
+        addTaskBtn.style.display = 'none';
+        editTaskBtn.style.display ='inline-block';
+        editTaskBtn.dataset.id = id;
 }
 const deleteAllTask = ()=> {
-    if (todos.length) {
-        todos = [];
+    if (delConfirm() ==true) {
+        if (todos.length) {
+            todos = [];
+            saveToLocalStorage();
+            displayTodos();
+            showAlert('all todos cleared successfuly' , 'success')
+        }else {
+            showAlert('no todos to clear' , 'error')
+        }
+    } else {
+
+    }
+
+};
+const delConfirm = ()=> {
+    return confirm('you are deleting a task. are you sure?');
+}
+
+const deleteHandler = (id)=> {
+    if(delConfirm() == true) {
+        changeEditToAdd()
+        const newTodos = todos.filter((todo)=> todo.id !== id);
+        todos = newTodos;
         saveToLocalStorage();
         displayTodos();
-        showAlert('all todos cleared successfuly' , 'success')
-    }else {
-        showAlert('no todos to clear' , 'error')
+        showAlert('todo deleted successfuly', 'success');
     }
-};
-const deleteHandler = (id)=> {
-    const newTodos = todos.filter((todo)=> todo.id !== id);
-    todos = newTodos;
-    saveToLocalStorage();
-    displayTodos();
-    showAlert('todo deleted successfuly', 'success');
+    else {
+        
+    }
 }
 const applyEditHandler = (event)=> {
     const id = event.target.dataset.id;
     const todo = todos.find(todo =>todo.id === id);
     todo.task = taskInput.value;
     todo.date = dataInput.value;
+    taskInput.value = ''
+    dataInput.value = ''
+
     addTaskBtn.style.display = 'inline-block';
     editTaskBtn.style.display = 'none';
     saveToLocalStorage();
@@ -119,7 +143,6 @@ const filterHandler = (event)=> {
             case 'completed':
                 filterTodos = todos.filter(todo => todo.completed === true)
                 break;
-    
         default:
             filterTodos = todos;
             break;
